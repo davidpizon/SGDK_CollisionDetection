@@ -1,0 +1,32 @@
+make.exe --dry-run --always-make --keep-going --print-directory
+make: Entering directory 'c:/Projects/SGDK_CollisionDetection'
+mkdir -p src/boot
+mkdir -p out
+ 
+cp C:/SGDK/src/boot/sega.s src/boot/sega.s
+ 
+cp C:/SGDK/src/boot/rom_head.c src/boot/rom_head.c
+ 
+C:/sgdk/bin/gcc.exe  -DSGDK_GCC -march=68000 -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -Iinc -Isrc -Ires -IC:/SGDK/inc -IC:/SGDK/res -BC:/SGDK/bin -c src/boot/rom_head.c -o out/rom_head.o
+C:/sgdk/bin/ld.exe -T C:/SGDK/md.ld -nostdlib --oformat binary -o out/rom_head.bin out/rom_head.o
+C:/sgdk/bin/gcc.exe -x assembler-with-cpp  -DSGDK_GCC -march=68000 -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -Iinc -Isrc -Ires -IC:/SGDK/inc -IC:/SGDK/res -BC:/SGDK/bin -c src/boot/sega.s -o out/sega.o
+ 
+java -jar C:/SGDK/bin/rescomp.jar res/resources.res res/resources.rs -dep out/res/resources.o
+ 
+mkdir -p out/res/
+C:/sgdk/bin/gcc.exe -x assembler-with-cpp  -DSGDK_GCC -march=68000 -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -Iinc -Isrc -Ires -IC:/SGDK/inc -IC:/SGDK/res -BC:/SGDK/bin -O3 -fuse-linker-plugin -fno-web -fno-gcse -fno-unit-at-a-time -fomit-frame-pointer -flto -c res/resources.rs -o out/res/resources.o
+cp res/resources.d out/res/resources.d
+rm res/resources.d
+ 
+mkdir -p out/src/
+C:/sgdk/bin/gcc.exe  -DSGDK_GCC -march=68000 -Wall -Wextra -Wno-shift-negative-value -Wno-main -Wno-unused-parameter -fno-builtin -Iinc -Isrc -Ires -IC:/SGDK/inc -IC:/SGDK/res -BC:/SGDK/bin -O3 -fuse-linker-plugin -fno-web -fno-gcse -fno-unit-at-a-time -fomit-frame-pointer -flto -MMD -c src/main.c -o out/src/main.o
+ 
+echo "out/res/resources.o out/src/main.o" > out/cmd_
+C:/sgdk/bin/gcc.exe -BC:/SGDK/bin -n -T C:/SGDK/md.ld -nostdlib out/sega.o @out/cmd_ C:/SGDK/lib/libmd.a C:/SGDK/lib/libgcc.a -o out/rom.out -Wl,--gc-sections
+rm out/cmd_
+C:/sgdk/bin/objcopy.exe -O binary out/rom.out out/rom.bin
+java -jar C:/SGDK/bin/sizebnd.jar out/rom.bin -sizealign 131072 -checksum
+C:/sgdk/bin/nm.exe --plugin=liblto_plugin-0.dll -n out/rom.out > out/symbol.txt
+rm res/resources.rs
+make: Leaving directory 'c:/Projects/SGDK_CollisionDetection'
+ 
