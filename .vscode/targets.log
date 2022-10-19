@@ -7,7 +7,7 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 # There is NO WARRANTY, to the extent permitted by law.
  
 
-# Make data base, printed on Sat Oct 15 09:15:03 2022
+# Make data base, printed on Mon Oct 17 23:33:07 2022
 
 # Variables
 
@@ -50,7 +50,7 @@ MAKE_COMMAND := C:/ProgramData/chocolatey/lib/make/tools/install/bin/make.exe
 # automatic
 @D = $(patsubst %/,%,$(patsubst %\,%,$(dir $@)))
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_21764_BCEYZVFTRUOPTLQP
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_170116_BNMJPRCDEMHZTUUA
 # makefile (from 'Makefile', line 23)
 RES := res
 # environment
@@ -66,7 +66,7 @@ VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # automatic
 %F = $(notdir $%)
 # environment
-VSCODE_CODE_CACHE_PATH = C:\Users\david\AppData\Roaming\Code\CachedData\64bbfbf67ada9953918d72e1df2f4d8e537d340e
+VSCODE_CODE_CACHE_PATH = C:\Users\david\AppData\Roaming\Code\CachedData\d045a5eda657f4d7b676dedbfa7aab8207f8a075
 # environment
 LANG = C
 # default
@@ -108,7 +108,7 @@ MAKEFILE_LIST := Makefile
 # automatic
 @F = $(notdir $@)
 # environment
-VSCODE_PID = 21764
+VSCODE_PID = 170116
 # automatic
 ?D = $(patsubst %/,%,$(patsubst %\,%,$(dir $?)))
 # automatic
@@ -148,7 +148,8 @@ DRIVERDATA = C:\Windows\System32\Drivers\DriverData
 # environment
 COMSPEC = C:\WINDOWS\system32\cmd.exe
 # environment
-WINDIR = C:\WINDOWS
+WINDIR 
+ = C:\WINDOWS
 # environment
 MAKELEVEL := 0
 # default
@@ -256,7 +257,7 @@ ELECTRON_RUN_AS_NODE = 1
 # environment
 TEMP = C:\Users\david\AppData\Local\Temp
 # environment
-VSCODE_IPC_HOOK = \\.\pipe\c5a5aa94e51481269b11c9790932dfeb-1.72.0-main-sock
+VSCODE_IPC_HOOK = \\.\pipe\c5a5aa94e51481269b11c9790932dfeb-1.72.2-main-sock
 # environment
 SGDK_PATH = C:\sgdk
 # makefile (from 'Makefile', line 13)
@@ -304,11 +305,13 @@ FLAGSZ80 := -isrc -iinc -ires -iC:/SGDK/src -iC:/SGDK/inc
 
 # Directories
 
-# src (key c:/Projects/SGDK_CollisionDetection/src, mtime 1665850474): 3 files, no impossibilities.
+# src/boot (key c:/Projects/SGDK_CollisionDetection/src/boot, mtime 1665980357): 4 files, no impossibilities.
+# src (key c:/Projects/SGDK_CollisionDetection/src, mtime 1665980357): 4 files, no impossibilities.
 # . (key c:/Projects/SGDK_CollisionDetection, mtime 1665850475): 9 files, no impossibilities.
-# res (key c:/Projects/SGDK_CollisionDetection/res, mtime 1665850474): 5 files, no impossibilities.
+# res (key c:/Projects/SGDK_CollisionDetection 
+/res, mtime 1665980366): 6 files, no impossibilities.
 
-# 17 files, no impossibilities in 3 directories.
+# 23 files, no impossibilities in 4 directories.
 
 # Implicit Rules
 
@@ -444,13 +447,13 @@ src/boot/rom_head.c: C:/SGDK/src/boot/rom_head.c
 
 cleandep:
 #  Implicit rule search has not been done.
-#  Modification time never checked.
+#  Modification time never  
+checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 142):
 	rm -f $(DEPS)
 
-# makef 
-ile (from 'Makefile', line 121)
+# makefile (from 'Makefile', line 121)
 debug: LIBMD = $(LIB)/libmd_debug.a
 # makefile (from 'Makefile', line 120)
 debug: FLAGS = $(DEFAULT_FLAGS)
@@ -625,6 +628,7 @@ cleanobj:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+ 
 #  recipe to execute (from 'Makefile', line 151):
 	rm -f $(OBJS) out/rom_head.bin out/*.o
 	rm -rf out/res out/src
@@ -674,13 +678,13 @@ out/rom_head.bin: out/rom_head.o
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 65 / storage = 630 B / avg = 9 B
-# current buf: size = 8174 B / used = 630 B / count = 65 / avg 
- = 9 B
+# strcache buffers: 1 
+ (0) / strings = 70 / storage = 674 B / avg = 9 B
+# current buf: size = 8174 B / used = 674 B / count = 70 / avg = 9 B
 
-# strcache performance: lookups = 166 / hit rate = 60%
+# strcache performance: lookups = 173 / hit rate = 59%
 # hash-table stats:
-# Load=65/8192=1%, Rehash=0, Collisions=0/166=0%
-# Finished Make data base on Sat Oct 15 09:15:03 2022
+# Load=70/8192=1%, Rehash=0, Collisions=0/173=0%
+# Finished Make data base on Mon Oct 17 23:33:07 2022
 
  

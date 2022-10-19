@@ -2,13 +2,12 @@
 #include <pal.h>
 
 #include "resources.h"
-
-
-void setCameraPosition(s16 x, s16 y);
+#include "camera.h"
 
 
 #define MAX_X 1408
 #define MAX_Y 1344
+
 u8 level[177][190] = {
   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
   {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -180,16 +179,18 @@ u8 level[177][190] = {
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 };
 
+/*
 typedef struct {
 	f32 x;
 	f32 y;
 } Point;
+*/
 
 typedef struct {
 	bool moving;
 	bool is_on_floor;
-	Point pos;
-	Point spd;
+	Point_fix32_t pos;
+	Point_fix32_t spd;
 } Player;
 
 Map *bga;
@@ -197,12 +198,14 @@ Sprite* cup_obj;
 
 Player plr;
 
-s16 camPosX = -1;
-s16 camPosY = -1;
+//s16 camPosX = -1;
+//s16 camPosY = -1;
+Camera_t camera = {
+    .position.x = -1,
+    .position.y = -1
+    };
 
-bool paused = FALSE;
-
-bool checkCollision(s16 x, s16 y){
+bool checkCollision(s16 x, s16 y) {
 	plr.is_on_floor = FALSE;
 	
 	s16 y_tile = y >> 3;
@@ -294,44 +297,13 @@ void moveEntity(){
 	plr.pos.x = FIX32(posX);
 	plr.pos.y = FIX32(posY);
 	
-	setCameraPosition(posX,posY);
+	//setCameraPosition(&camera, posX, posY);
 }
 
-void setCameraPosition(s16 x, s16 y)
-{
-    if ((x-160 != camPosX) || (y-120 != camPosY))
-    {
-        camPosX = x-160;
-        camPosY = y-120;
-		
-		if (camPosX < 0){
-			camPosX = 0;
-			
-		} else if (camPosX > MAX_X-320) {
-			camPosX = MAX_X-320;
-		}		
-		if (camPosY < 0){
-			camPosY = 0;
-		} else if (camPosY > MAX_Y-120) {
-			camPosY = MAX_Y-120;
-		}	
-		
-		SPR_setPosition(cup_obj, x-camPosX, y-camPosY);
-		
-		
-        MAP_scrollTo(bga, camPosX, camPosY);
-    }
-}
-
-void handleInput()
-{
+void handleInput() {
     u16 value = JOY_readJoypad(JOY_1);
-
-
 	
-    if (!paused && !plr.moving)
-    {
-		
+    if (!plr.moving) {
 		plr.spd.x = 0;
 		
 		if(!plr.is_on_floor){
@@ -366,8 +338,7 @@ int main()
 	plr.spd.x = 0;
 	plr.spd.y = 0;
 	
-	
-	u16 ind;
+    u16 ind;
     ind = TILE_USER_INDEX;
 	
     VDP_loadTileSet(&bga_tileset, ind, DMA);
@@ -378,10 +349,11 @@ int main()
 	SPR_init();
     PAL_setPalette(PAL3, spr_cup.palette->data, DMA);
     //VDP_setPalette(PAL3, spr_cup.palette->data);
-	setCameraPosition(fix32ToInt(plr.pos.x),fix32ToInt(plr.pos.y));
-	setCameraPosition(fix32ToInt(plr.pos.x)-1,fix32ToInt(plr.pos.y)-1);
-	
-	cup_obj = SPR_addSprite(&spr_cup, fix32ToInt(plr.pos.x), fix32ToInt(plr.pos.y), TILE_ATTR(PAL3, 0, FALSE, FALSE));
+    cup_obj = SPR_addSprite(&spr_cup, fix32ToInt(plr.pos.x), fix32ToInt(plr.pos.y), TILE_ATTR(PAL3, 0, FALSE, FALSE));
+
+	setCameraPosition(&camera, bga, fix32ToInt(plr.pos.x), fix32ToInt(plr.pos.y));
+	//setCameraPosition(&camera, bga, fix32ToInt(plr.pos.x)-1, fix32ToInt(plr.pos.y)-1);
+    SPR_setPosition(cup_obj, fix32ToInt(plr.pos.x) - camera.position.x, fix32ToInt(plr.pos.y) - camera.position.y);
 	
 	SPR_update();
 	SYS_doVBlankProcess();
@@ -393,7 +365,8 @@ int main()
 		moveEntity();
 		
 		VDP_showFPS(FALSE);
-		setCameraPosition(fix32ToInt(plr.pos.x),fix32ToInt(plr.pos.y));
+		setCameraPosition(&camera, bga, fix32ToInt(plr.pos.x), fix32ToInt(plr.pos.y));
+        SPR_setPosition(cup_obj, fix32ToInt(plr.pos.x) - camera.position.x, fix32ToInt(plr.pos.y) - camera.position.y);
         
 		SYS_doVBlankProcess();
     }
